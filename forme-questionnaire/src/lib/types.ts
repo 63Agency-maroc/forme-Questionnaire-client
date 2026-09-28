@@ -30,7 +30,7 @@ export interface QuestionnaireAnswers {
   language: Language | "";
   fullName: string;
   company: string;
-  service: ServiceOption | "";
+  service: ServiceOption[];
   serviceOther: string;
   satisfaction: number | null;
   likedMost: string;
@@ -46,7 +46,7 @@ export interface QuestionnaireAnswers {
   caseStudy: "Oui" | "Non" | "";
   referrals: string;
   returnIntent: ReturnIntent | "";
-  nextNeed: ServiceOption | "";
+  nextNeed: ServiceOption[];
   nextNeedOther: string;
 }
 
@@ -59,7 +59,7 @@ export const emptyAnswers: QuestionnaireAnswers = {
   language: "",
   fullName: "",
   company: "",
-  service: "",
+  service: [],
   serviceOther: "",
   satisfaction: null,
   likedMost: "",
@@ -75,6 +75,28 @@ export const emptyAnswers: QuestionnaireAnswers = {
   caseStudy: "",
   referrals: "",
   returnIntent: "",
-  nextNeed: "",
+  nextNeed: [],
   nextNeedOther: "",
 };
+
+export function normalizeAnswers(
+  input: Partial<QuestionnaireAnswers> & {
+    service?: ServiceOption[] | ServiceOption | "";
+    nextNeed?: ServiceOption[] | ServiceOption | "";
+  },
+): QuestionnaireAnswers {
+  const toList = (
+    value: ServiceOption[] | ServiceOption | "" | undefined,
+  ): ServiceOption[] => {
+    if (Array.isArray(value)) return value;
+    if (value) return [value];
+    return [];
+  };
+
+  return {
+    ...emptyAnswers,
+    ...input,
+    service: toList(input.service),
+    nextNeed: toList(input.nextNeed),
+  };
+}

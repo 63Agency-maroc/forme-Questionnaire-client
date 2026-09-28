@@ -46,8 +46,8 @@ export function validateStep(
   if (step === 1) {
     if (!answers.fullName.trim()) errors.fullName = t.required;
     if (!answers.company.trim()) errors.company = t.required;
-    if (!answers.service) errors.service = t.chooseService;
-    if (answers.service === "Autre" && !answers.serviceOther.trim()) {
+    if (!answers.service.length) errors.service = t.chooseService;
+    if (answers.service.includes("Autre") && !answers.serviceOther.trim()) {
       errors.serviceOther = t.writeService;
     }
   }
@@ -75,8 +75,8 @@ export function validateStep(
 
   if (step === 5) {
     if (!answers.returnIntent) errors.returnIntent = t.chooseAnswer;
-    if (!answers.nextNeed) errors.nextNeed = t.chooseService;
-    if (answers.nextNeed === "Autre" && !answers.nextNeedOther.trim()) {
+    if (!answers.nextNeed.length) errors.nextNeed = t.chooseService;
+    if (answers.nextNeed.includes("Autre") && !answers.nextNeedOther.trim()) {
       errors.nextNeedOther = t.writeNeed;
     }
   }

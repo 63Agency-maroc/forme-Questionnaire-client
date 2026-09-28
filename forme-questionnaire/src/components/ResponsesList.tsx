@@ -71,6 +71,7 @@ export function ResponsesList() {
             {LABELS.map(({ key, label }) => {
               const value = response[key];
               if (value === "" || value == null) return null;
+              if (Array.isArray(value) && value.length === 0) return null;
               if (key === "id" || key === "submittedAt" || key === "fullName" || key === "company") {
                 return null;
               }
@@ -78,7 +79,7 @@ export function ResponsesList() {
                 <div key={key} className="rounded-2xl bg-black/40 p-3">
                   <dt className="mb-1 text-xs text-white/40">{label}</dt>
                   <dd className="text-sm leading-relaxed text-white whitespace-pre-wrap">
-                    {String(value)}
+                    {Array.isArray(value) ? value.join(", ") : String(value)}
                   </dd>
                 </div>
               );

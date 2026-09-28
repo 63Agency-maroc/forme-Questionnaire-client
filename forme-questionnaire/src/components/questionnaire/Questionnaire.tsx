@@ -157,14 +157,19 @@ export function QuestionnaireForm({
                 error={errors.service || errors.serviceOther}
               >
                 <ChoiceGroup
+                  multiple
+                  hint={t.multiSelectHint}
                   dir={t.dir}
                   options={labeledOptions(SERVICES, t.services)}
                   value={answers.service}
                   onChange={(v) =>
-                    update("service", v as QuestionnaireAnswers["service"])
+                    update(
+                      "service",
+                      (Array.isArray(v) ? v : [v]) as QuestionnaireAnswers["service"],
+                    )
                   }
                 />
-                {answers.service === "Autre" && (
+                {answers.service.includes("Autre") && (
                   <div className="mt-3">
                     <TextInput
                       dir={t.dir}
@@ -361,14 +366,19 @@ export function QuestionnaireForm({
                 error={errors.nextNeed || errors.nextNeedOther}
               >
                 <ChoiceGroup
+                  multiple
+                  hint={t.multiSelectHint}
                   dir={t.dir}
                   options={labeledOptions(SERVICES, t.services)}
                   value={answers.nextNeed}
                   onChange={(v) =>
-                    update("nextNeed", v as QuestionnaireAnswers["nextNeed"])
+                    update(
+                      "nextNeed",
+                      (Array.isArray(v) ? v : [v]) as QuestionnaireAnswers["nextNeed"],
+                    )
                   }
                 />
-                {answers.nextNeed === "Autre" && (
+                {answers.nextNeed.includes("Autre") && (
                   <div className="mt-3">
                     <TextInput
                       dir={t.dir}

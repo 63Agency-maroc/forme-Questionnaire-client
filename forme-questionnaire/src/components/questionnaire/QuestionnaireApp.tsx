@@ -10,7 +10,7 @@ import {
   isLanguage,
   type Language,
 } from "@/lib/i18n";
-import { emptyAnswers, type QuestionnaireAnswers } from "@/lib/types";
+import { emptyAnswers, normalizeAnswers, type QuestionnaireAnswers } from "@/lib/types";
 
 const STORAGE_KEY = "63-agency-questionnaire";
 
@@ -30,7 +30,7 @@ export function QuestionnaireApp() {
           answers?: QuestionnaireAnswers;
         };
         if (isLanguage(parsed.lang)) setLang(parsed.lang);
-        if (parsed.answers) setAnswers({ ...emptyAnswers, ...parsed.answers });
+        if (parsed.answers) setAnswers(normalizeAnswers(parsed.answers));
         if (parsed.step && parsed.step >= 1 && parsed.step <= 5) {
           setStep(parsed.step);
         }

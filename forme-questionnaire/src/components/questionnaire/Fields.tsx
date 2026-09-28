@@ -91,12 +91,16 @@ export function ChoiceGroup({
   onChange,
   columns = 2,
   dir = "ltr",
+  multiple = false,
+  hint,
 }: {
   options: { value: string; label: string }[];
-  value: string;
-  onChange: (value: string) => void;
+  value: string | string[];
+  onChange: (value: string | string[]) => void;
   columns?: 1 | 2 | 3;
   dir?: "rtl" | "ltr";
+  multiple?: boolean;
+  hint?: string;
 }) {
   const grid =
     columns === 1
@@ -105,26 +109,45 @@ export function ChoiceGroup({
         ? "grid-cols-1 sm:grid-cols-3"
         : "grid-cols-1 sm:grid-cols-2";
 
+  const selectedValues = Array.isArray(value) ? value : value ? [value] : [];
+
+  function toggle(optionValue: string) {
+    if (!multiple) {
+      onChange(optionValue);
+      return;
+    }
+    const next = selectedValues.includes(optionValue)
+      ? selectedValues.filter((item) => item !== optionValue)
+      : [...selectedValues, optionValue];
+    onChange(next);
+  }
+
   return (
-    <div className={`grid gap-2.5 ${grid}`}>
-      {options.map((option) => {
-        const selected = value === option.value;
-        return (
-          <button
-            key={option.value}
-            type="button"
-            dir={dir}
-            onClick={() => onChange(option.value)}
-            className={`rounded-2xl border px-4 py-3.5 text-start text-[0.95rem] transition ${
-              selected
-                ? "border-white bg-white text-black"
-                : "border-white/12 bg-white/[0.03] text-white hover:border-white/30 hover:bg-white/[0.06]"
-            }`}
-          >
-            {option.label}
-          </button>
-        );
-      })}
+    <div className="space-y-2">
+      {multiple && hint ? (
+        <p className="text-xs text-white/40">{hint}</p>
+      ) : null}
+      <div className={`grid gap-2.5 ${grid}`}>
+        {options.map((option) => {
+          const selected = selectedValues.includes(option.value);
+          return (
+            <button
+              key={option.value}
+              type="button"
+              dir={dir}
+              onClick={() => toggle(option.value)}
+              aria-pressed={selected}
+              className={`rounded-2xl border px-4 py-3.5 text-start text-[0.95rem] transition ${
+                selected
+                  ? "border-white bg-white text-black"
+                  : "border-white/12 bg-white/[0.03] text-white hover:border-white/30 hover:bg-white/[0.06]"
+              }`}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

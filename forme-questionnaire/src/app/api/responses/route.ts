@@ -3,7 +3,7 @@ import path from "path";
 import { NextResponse } from "next/server";
 import { sendFeedbackEmail } from "@/lib/mail";
 import {
-  emptyAnswers,
+  normalizeAnswers,
   type QuestionnaireAnswers,
   type StoredResponse,
 } from "@/lib/types";
@@ -28,7 +28,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const body = (await request.json()) as Partial<QuestionnaireAnswers>;
-  const answers: QuestionnaireAnswers = { ...emptyAnswers, ...body };
+  const answers = normalizeAnswers(body);
 
   if (
     typeof answers.fullName !== "string" ||

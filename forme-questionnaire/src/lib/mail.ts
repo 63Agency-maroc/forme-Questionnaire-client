@@ -22,12 +22,26 @@ function block(title: string, rows: string[]): string {
 }
 
 function serviceLabel(
-  service: string,
+  services: string[] | string,
   other: string,
 ): string {
-  if (!service) return "—";
-  if (service === "Autre") return other ? `Autre — ${other}` : "Autre";
-  return service;
+  const list = Array.isArray(services)
+    ? services
+    : services
+      ? [services]
+      : [];
+
+  if (!list.length) return "—";
+
+  return list
+    .map((service) =>
+      service === "Autre"
+        ? other
+          ? `Autre — ${other}`
+          : "Autre"
+        : service,
+    )
+    .join(", ");
 }
 
 export function buildFeedbackEmailText(response: StoredResponse): string {

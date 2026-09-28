@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   title: "Questionnaire client | 63 Agency",
   description:
     "Votre avis nous aide à améliorer l'expérience 63 Agency et à construire de meilleures case studies.",
+  icons: {
+    icon: [{ url: "/logo/image.png", type: "image/png" }],
+    apple: [{ url: "/logo/image.png", type: "image/png" }],
+    shortcut: "/logo/image.png",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

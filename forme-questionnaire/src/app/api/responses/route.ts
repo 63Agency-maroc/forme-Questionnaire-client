@@ -1,7 +1,12 @@
 import { mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
 import { NextResponse } from "next/server";
-import { emptyAnswers, type QuestionnaireAnswers, type StoredResponse } from "@/lib/types";
+import { sendFeedbackEmail } from "@/lib/mail";
+import {
+  emptyAnswers,
+  type QuestionnaireAnswers,
+  type StoredResponse,
+} from "@/lib/types";
 
 const dataDir = path.join(process.cwd(), "data");
 const dataFile = path.join(dataDir, "responses.json");
@@ -45,5 +50,13 @@ export async function POST(request: Request) {
   existing.unshift(stored);
   await writeFile(dataFile, JSON.stringify(existing, null, 2), "utf8");
 
-  return NextResponse.json({ ok: true, id: stored.id });
+  let emailSent = false;
+  try {
+    await sendFeedbackEmail(stored);
+    emailSent = true;
+  } catch (error) {
+    console.error("Failed to send feedback email:", error);
+  }
+
+  return NextResponse.json({ ok: true, id: stored.id, emailSent });
 }
